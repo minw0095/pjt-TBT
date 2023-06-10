@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% load humanize %}
+{% load index_tag %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'styles/product_index.css' %} ">
+{% endblock css %}
+
+{% block banner %}
+{% comment %} 배너 {% endcomment %}
+<section class='pdt-banner'>
+  {% if category == 'note' %}
+  <img src="{% static 'img/notepad.jpg' %}" alt="">
+  <h1>노트/메모지</h1>
+  {% elif category == 'diary' %}
+  <img src="{% static 'img/diary.jpg' %}" alt="">
+  <h1>다이어리</h1>
+  {% elif category == 'pencil' %}
+  <img src="{% static 'img/writing.jpg' %}" alt="">
+  <h1>필기류/필통</h1>
+  {% elif category == 'file' %}
+  <img src="{% static 'img/files.jpg' %}" alt="">
+  <h1>파일/바인더</h1>
+  {% elif category == 'card' %}
+  <img src="{% static 'img/card.jpg' %}" alt="">
+  <h1>크리스마스 카드</h1>
+  {% elif category == 'wreath' %}
+  <img src="{% static 'img/리스.jpg' %}" alt="">
+  <h1>크리스마스 리스</h1>
+  {% elif category == 'decoration' %}
+  <img src="{% static 'img/장식.jpg' %}" alt="">
+  <h1>크리스마스 트리 장식</h1>
+  {% endif %}
+</section>
+<section class='pdt-filter' data-filter='{{ filter }}'>
+  <div class="container dropdown-christmas-btn-wrap">
+    {% comment %} 분류 필터 {% endcomment %}
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      </button>
+      <ul class="dropdown-menu" name='filter'>
+        <li><a class="dropdown-item active" href="/products/{{ category }}/?filter=register">등록일순</a></li>
+        <li><a class="dropdown-item" href="/products/{{ category }}/?filter=high-sale">높은할인률순</a></li>
+        <li><a class="dropdown-item" href="/products/{{ category }}/?filter=high-price">높은가격순</a></li>
+        <li><a class="dropdown-item" href="/products/{{ category }}/?filter=low-price">낮은가격순</a></li>
+      </ul>
+    </div>
+    {% comment %} 크리스마스 카드/리스/트리장식 {% endcomment %}
+    {% if category == 'card' or category == 'wreath' or category == 'decoration' %}
+    <ul class='christmas-category-btn'>
+      <input type="hidden" id='xmas-category' value='{{ category }}'>
+      <li><a href="{% url 'products:card' %}" class='xmas-btn active'># Card</a></li>
+      <li><a href="{% url 'products:wreath' %}" class='xmas-btn'># Wreath</a></li>
+      <li><a href="{% url 'products:decoration' %}" class='xmas-btn'># Tree Decoration</a></li>
+    </ul>
+    {% endif %}
+  </div>
+</section>
+{% endblock banner %}
+
+{% block body %}
+{% comment %} 상품 목록 {% endcomment %}
+<section class='pdt-list row row-cols-2 row-cols-md-3 row-cols-lg-4 gx-0 gy-3'>
+  {% for product in products %}
+  <article class='col'>
+    <div class='pdt-item'>
+      <a class='pdt-item-img-wrap' href="{% url 'products:products_detail' product.pk %}">
+        <img class='pdt-item-img' src="{{ product.product_image.all.0.image.url }}" alt="">
+      </a>
+      <a class='pdt-item-name' href="{% url 'products:products_detail' product.pk %}">
+        {{ product.name }}
+      </a>
+      <div class='pdt-item-price'>
+        {% if product.sale != 0 %}
+        <del class='before-sale'>{{ product.pay|intcomma }}원</del>
+        {% endif %}
+        <span class='pdt-pay'>{{ product.pay|discount:product.sale|intcomma }}원</span>
+      </div>
+      {% if product.sale != 0 %}
+      <div class='pdt-sale-badge'>
+        {{ product.sale }}%
+      </div>
+      {% endif %}
+    </div>
+  </article>
+  {% endfor %}
+</section>
+
+{% endblock body %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{% static 'script/pdt-index.js' %}"></script>
+{% endblock js %}

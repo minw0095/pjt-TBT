@@ -1,0 +1,133 @@
+@import url(./main.css);
+
+/* 배너 */
+.pdt-banner {
+  position: relative;
+  width: 100%;
+  height: 500px;
+}
+.pdt-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(50%)
+}
+.pdt-banner h1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 3rem;
+  font-weight: 600;
+  /* letter-spacing: 0.8rem; */
+}
+
+/* 분류 필터 */
+.pdt-filter {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  border-bottom: 1px solid var(--main);
+}
+.dropdown-christmas-btn-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dropdown-toggle, .dropdown-toggle:visited {
+  background-color: var(--main-sub) !important;
+}
+.dropdown-toggle:hover, .dropdown-toggle:active {
+  background-color: var(--main) !important;
+}
+.dropdown-item {
+  color: var(--txt);
+}
+.dropdown-item:hover {
+  background-color: rgb(33, 104, 79, 0.3);
+}
+.dropdown-item.active {
+  background-color: var(--main);
+}
+.christmas-category-btn {
+  display: flex;
+  list-style: none;
+  font-size: 1rem;
+}
+.christmas-category-btn li {
+  margin-right: 0.5rem;
+}
+.christmas-category-btn li a {
+  display: block;
+  padding: 0.3rem 0.5rem;
+  width: 100%;
+  background-color: rgb(240, 240, 240);
+  border-radius: 1rem;
+}
+.christmas-category-btn a:hover {
+  box-shadow: 5px 5px 5px #9595952a;
+}
+.christmas-category-btn a.active {
+  background-color: #959595ad;
+  color: white;
+}
+
+/* 상품 목록 */
+.pdt-list {
+  margin: 3rem 0 3rem 0;
+}
+.pdt-item {
+  position: relative;
+  padding: 1rem;
+  height: 100%;
+}
+.pdt-item-img-wrap {
+  display: inline-block;
+  width: 100%;
+  height: 226px;
+  overflow: hidden;
+}
+.pdt-item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pdt-item-img:hover {
+  transform: scale(1.1) ;
+  transition: all 0.7s;
+}
+.pdt-item-name {
+  display: block;
+  margin: 1rem 0 0.5rem 0;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.pdt-item-name:hover {
+  color: var(--main-sub);
+}
+.pdt-item-price {
+  text-align: center;
+}
+.before-sale {
+  color: var(--line);
+  font-size: 0.9rem;
+}
+.pdt-pay {
+  color: var(--highlight);
+  font-size: 0.9rem;
+}
+.pdt-sale-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--highlight);
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  line-height: 60px;
+}

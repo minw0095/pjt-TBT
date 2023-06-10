@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+<a href="{% url 'products:index' %}">돌아가기</a>
+<p>{{product.name}}</p>
+<img src="{{ product.product_image.url }}">
+<p>{{reviews.count}}개</p>
+<p>{{grade|floatformat}}점</p>
+{% if request.user.is_authenticated %}
+<a href="{% url 'reviews:create' product.pk %}">리뷰 쓰기</a>
+{% endif %}
+<hr>
+{% for review in reviews %}
+{% if review.review_image %}
+<img src="{{ review.review_image.url }}">
+{% endif %}
+{{review.pk}}
+<p>{{review.title}}</p>
+<a href="{% url 'accounts:detail' review.account.pk %}">
+  <p>{{review.account}}</p>
+</a>
+<p>{{review.content}}</p>
+<p>{{review.grade}}</p>
+<p>작성시간:{{review.created_at}}</p>
+
+<!--{% if not request.user.pk == review.account.pk %} {% if request.user in review.like.all %} <button id="like-btn" type='button' data-user-id="{{review.pk}}"> unlike </button> {% elif request.user.is_authenticated %} <button id="like-btn" type='button' data-user-id="{{review.pk}}"> like </button> {% elif not request.user.is_authenticated %} <p>비로그인은 좋아요를 누를 수 없어요</p> {% endif %} {% else %} <P>자기자신 추천x</p> {% endif %} -->
+<div>
+  <p>좋아요:
+  </p>
+  <span class="like-cnt">
+    {{review.like.count}}
+  </span>
+  {% if request.user in review.like.all %}
+  <button type="submit" class="like-btn" data-review-id="{{ review.pk }}">좋아요 취소</button>
+  {% else %}
+  <button type="submit" class="like-btn" data-review-id="{{ review.pk }}">좋아요</button>
+  {% endif %}
+
+
+</div>
+
+{% if not review.updated_at == review.created_at %}
+<p>수정시간:{{review.updated_at}}</p>
+{% endif %}
+{% if request.user.is_authenticated and request.user.pk == review.account.pk %}
+<a href=" {% url 'reviews:delete' review.pk %} ">삭제</a>
+<a href="{% url 'reviews:update' review.pk %}">수정</a>
+{% endif %}
+<hr>
+{% endfor %}
+
+<script>
+  const likeBtn = document.querySelectorAll(".like-btn");
+
+  const reviewlike = function (event) {
+    const reviewId = event.target.dataset.reviewId
+    axios({
+      method: 'get',
+      url: `/reviews/${reviewId}/likes/`
+    })
+      .then((response) => {
+        const isLiked = response.data.isLiked;
+        if (isLiked === true) {
+          event.target.innerText = "좋아요 취소"
+        } else {
+          event.target.innerText = "좋아요"
+        }
+
+        const likeCount = event.target.previousElementSibling;
+        likeCount.innerText = response.data.likeCount;
+      })
+  }
+
+  likeBtn.forEach(btn => {
+    btn.addEventListener('click', reviewlike);
+  })
+</script>
+{% endblock body %}
+<!--<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> <script> const likebtn = document.querySelector('#like-btn') likebtn.addEventListener('click', function (event) { axios({ method: 'get', url: `/reviews/like/${event.target.dataset.reviewId}/` }) .then(response => { if (response.data.islikes === true) { likebtn.innertext = 'unlike' } else { likebtn.innertext = 'like' } const likecnt = document.querySelector('#like-cnt') likecnt.innertext = 'count:' + response.data.likecount }) })</script>-->

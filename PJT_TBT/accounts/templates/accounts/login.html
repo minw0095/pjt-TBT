@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load widget_tweaks %}
+
+{% block body %}
+  <div id="login">
+    <div class="tit-area">
+      <h1 class="tit">
+        로그인</h1>
+    </div>
+    <div class='form-area'>
+      <form action="" method="POST" class="login-form">
+        {% csrf_token %}
+        <ul class="form-list">
+          <li>
+            <label for="username">아이디</label>
+            {% render_field form.username %}
+          </li>
+          <li>
+            <label for="password">비밀번호</label>
+            {% render_field form.password %}
+          </li>
+        </ul>
+        <button type="submit" class="btnC btn-sb">로그인</button>
+      </form>
+    </div>
+  </div>
+{% endblock body %}

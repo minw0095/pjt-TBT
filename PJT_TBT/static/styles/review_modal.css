@@ -1,0 +1,446 @@
+@import url(./main.css);
+
+:root {
+	--rate: #ffd61e;
+	--gr: #f1f1f1;
+}
+#review .btnC,
+#qna .btnC {
+	background: var(--main);
+	color: var(--bg);
+	border-radius: 0.2rem;
+	padding: 1rem 0.5rem;
+	transition: 0.3s;
+	cursor: pointer;
+}
+
+#review .btnC:hover,
+#qna .btnC:hover {
+	background: var(--main-sub);
+}
+
+.hidden {
+	display: none;
+	opacity: 0;
+}
+.modalC {
+	position: absolute;
+	top: 5%;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	min-width: 700px;
+	max-width: 80vh;
+	background: var(--bg);
+	padding: 5rem 6rem;
+	box-shadow: 0 4rem 6rem rgba(0, 0, 0, 0.3);
+	z-index: 1000;
+	transition: all 0.5s;
+	overflow-y: auto;
+}
+.modal-alert {
+	top: 40%;
+	text-align: center;
+}
+.modal-alert .btn-area {
+	margin-top: 2rem;
+}
+.modal-alert .btn-area .btnA {
+	padding: 0.5rem 1rem;
+	margin-right: 0.5rem;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+.modal-alert .btn-area .btn-cancel {
+	border: 1px solid var(--line);
+}
+.modal-alert .btn-area .btn-delete {
+	background: var(--highlight);
+	color: var(--bg);
+}
+
+.overlayC {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(4px);
+	z-index: 100;
+	transition: all 0.5s;
+	overflow: auto;
+}
+.overlayC2 {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(4px);
+	z-index: 100;
+	transition: all 0.5s;
+	overflow: auto;
+}
+.scroll-block {
+	overflow: hidden;
+}
+
+#pdt-review .pdt-rev-titarea,
+#pdt-qna .pdt-qna-titarea {
+	display: flex;
+	justify-content: space-between;
+}
+
+#review-area .rev-sec {
+	border-top: 2px solid var(--gr);
+	display: flex;
+	padding: 1rem;
+	position: relative;
+}
+#review-area .rev-sec .rev-empt {
+	margin: 1rem auto;
+}
+#review-area .rev-sec .rev-prof-img {
+	border-radius: 50%;
+	height: 100%;
+	min-width: 60px;
+	min-height: 60px;
+	max-width: 60px;
+	overflow: hidden;
+	margin-right: 2rem;
+}
+#review-area .rev-sec .rev-prof-img img {
+	width: 100%;
+	height: 100%;
+}
+/* #review-area .rev-sec .rev-main .rev-header {
+	position: relative;
+} */
+#review-area .rev-sec .rev-main .rev-header p {
+	margin-bottom: 1rem;
+}
+#review-area .rev-sec .rev-main .rev-header .rev-btn {
+	position: absolute;
+	top: 10px;
+	right: 0px;
+	align-items: center;
+	opacity: 0.7;
+}
+#review-area .rev-sec .rev-main .rev-header .rev-btn a:first-child {
+	margin-right: 0.5rem;
+}
+#review-area .rev-sec .rev-main .rev-header .rev-rate .bi-star-fill {
+	color: var(--rate);
+}
+#review-area .rev-sec .rev-main .rev-header .rev-rate .bi-star {
+	color: var(--gr);
+}
+#review-area .rev-sec .rev-main .rev-body p {
+	margin-bottom: 1.5rem;
+}
+#review-area .rev-sec .rev-main .rev-body .rev-img {
+	cursor: pointer;
+}
+#review-area .rev-sec .rev-main .rev-body .btn-close-img {
+	position: absolute;
+	top: 13%;
+	right: 25%;
+	color: var(--bg);
+	background: var(--txt);
+	font-size: 2rem;
+	z-index: 1001;
+}
+#review-area .rev-sec .rev-main .rev-body .rev-img-popup {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	max-width: 80vh;
+	box-shadow: 0 4rem 6rem rgba(0, 0, 0, 0.3);
+	z-index: 1000;
+	transition: all 0.5s;
+}
+#review-area .rev-sec .rev-main .rev-footer .like-btn {
+	border: 2px solid var(--main);
+	border-radius: 2rem;
+	color: var(--main);
+	padding: 0.5rem 0.3rem 0.5rem 0;
+	margin-top: 1.5rem;
+	transition: all 0.2s ease;
+	position: relative;
+}
+#review-area .rev-sec .rev-main .rev-footer .like-btn::after {
+	content: "";
+	display: inline-block;
+	height: 100%;
+	width: 100%;
+	border-radius: 100px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	transition: all 0.4s;
+}
+#review-area .rev-sec .rev-main .rev-footer .like-btn i {
+	padding: 0.5rem;
+	z-index: 1;
+}
+#review-area .rev-sec .rev-main .rev-footer .like-btn span {
+	margin-right: 0.3rem;
+}
+#review-area .rev-sec .rev-main .rev-footer .like-active {
+	background: var(--main);
+	color: var(--bg);
+}
+#review-area .rev-sec .rev-main .rev-footer .like-active::after {
+	background: var(--main);
+	transform: scaleX(1.4) scaleY(1.6);
+	opacity: 0;
+}
+#review-area .rev-sec .rev-main .rev-footer .like-btn:active {
+	transform: translateY(-1px);
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+#qna-area .qna-sec {
+	padding: 1rem 0;
+	border-bottom: 2px solid var(--gr);
+}
+#qna-area .qna-sec .qna-header {
+	font-size: 0.95rem;
+	margin-bottom: 2rem;
+	position: relative;
+}
+#qna-area .qna-sec .qna-header .qna-info .qna-status {
+	color: var(--main);
+	font-weight: 700;
+}
+#qna-area .qna-sec .qna-header .qna-user {
+	margin-top: 1rem;
+	color: var(--line);
+}
+#qna-area .qna-sec .qna-header .qna-btn {
+	position: absolute;
+	right: 0;
+	top: 0;
+	font-size: 1rem;
+}
+
+#qna-area .qna-sec .qna-main .qna-cont {
+	display: flex;
+	margin-bottom: 1.5rem;
+}
+#qna-area .qna-sec .qna-main .qna-cont span {
+	margin-right: 1rem;
+	color: var(--main);
+	font-weight: 700;
+}
+
+#product-detail #rev-modal-btn,
+#product-detail .qna-modal-btn {
+	font-weight: 700;
+	font-size: 1.2rem;
+	color: var(--main);
+	cursor: pointer;
+}
+#review,
+#qna,
+#review_update,
+#qna_update {
+	padding: 2rem;
+}
+#review .tit-area,
+#qna .tit-area,
+#review_update .tit-area,
+#qna_update .tit-area {
+	position: relative;
+	margin-bottom: 3rem;
+}
+#review .tit-area .tit,
+#qna .tit-area .tit,
+#review_update .tit-area .tit,
+#qna_update .tit-area .tit {
+	font-size: 2rem;
+	font-weight: 700;
+	text-align: center;
+}
+#review .tit-area .btn-close,
+#qna .tit-area .btn-close,
+#review_update .tit-area .btn-close,
+#qna_update .tit-area .btn-close {
+	font-size: 1.5rem;
+	position: absolute;
+	right: -1rem;
+	top: -1.5rem;
+	cursor: pointer;
+}
+#review .sect,
+#qna .sect,
+#review_update .sect,
+#qna_update .sect {
+	margin-bottom: 3rem;
+}
+#review .item-area,
+#qna .item-area,
+#review_update .item-area,
+#qna_update .item-area {
+	display: flex;
+	align-items: center;
+}
+#review .item-area .img-area,
+#qna .item-area .img-area,
+#review_update .item-area .img-area,
+#qna_update .item-area .img-area {
+	margin-right: 1.5rem;
+}
+#review .item-area .img-area img,
+#qna .item-area .img-area img,
+#review_update .item-area .img-area img,
+#qna_update .item-area .img-area img {
+	max-width: 200px;
+}
+#review .item-area .info p,
+#qna .item-area .info p,
+#review_update .item-area .info p,
+#qna_update .item-area .info p {
+	color: var(--main);
+	font-weight: 700;
+	margin-bottom: 1rem;
+}
+#review .sub-tit,
+#qna .sub-tit,
+#review_update .sub-tit,
+#qna_update .sub-tit {
+	font-size: 1.5rem;
+	font-weight: 700;
+	margin-bottom: 1rem;
+}
+#review .sub-tit span,
+#review_update .sub-tit span {
+	color: var(--highlight);
+}
+
+#review .review-form .btnC,
+#qna .qna-form .btnC,
+#review_update .review-form .btnC,
+#qna_update .qna-form .btnC {
+	width: 100%;
+}
+
+#review .review-form .rate-area,
+#review_update .review-form .rate-area {
+	margin-bottom: 5rem;
+}
+#review .review-form .rate-area .rate-stars,
+#review_update .review-form .rate-area .rate-stars {
+	width: 200px;
+}
+#review .review-form .rate-area input,
+#review_update .review-form .rate-area input {
+	display: none;
+}
+#review .review-form .rate-area label,
+#review_update .review-form .rate-area label {
+	color: var(--line);
+	transition: all 0.2s ease;
+	float: right;
+	margin: 0 0.3rem;
+	font-size: 1.8rem;
+	cursor: pointer;
+}
+
+#review .review-form .rate-stars input:not(:checked) ~ label:hover,
+#review .review-form .rate-stars input:not(:checked) ~ label:hover ~ label,
+#review_update .review-form .rate-stars input:not(:checked) ~ label:hover,
+#review_update
+	.review-form
+	.rate-stars
+	input:not(:checked)
+	~ label:hover
+	~ label {
+	color: var(--rate);
+}
+#review .review-form .rate-stars input:checked ~ label,
+#review_update .review-form .rate-stars input:checked ~ label {
+	color: var(--rate);
+}
+#review .review-form .review-txt input,
+#review .review-form .review-txt textarea,
+#qna .qna-form .qna-txt textarea,
+#review_update .review-form .review-txt input,
+#review_update .review-form .review-txt textarea,
+#qna_update .qna-form .qna-txt textarea {
+	border: 1px solid var(--main);
+	border-radius: 0.2rem;
+	padding: 0.3rem 0.5rem;
+	background: var(--gr);
+	width: 100%;
+	margin-top: 1rem;
+}
+
+#review .review-form .review-img span,
+#review_update .review-form .review-img span {
+	font-size: 0.95rem;
+}
+#review .review-form .review-img .upload-btn,
+#review_update .review-form .review-img .upload-btn {
+	border: 2px solid var(--main);
+	border-radius: 0.2rem;
+	display: block;
+	text-align: center;
+	cursor: pointer;
+	padding: 1rem;
+	margin-top: 1rem;
+	transition: 0.2s;
+	color: var(--main);
+	font-weight: 700;
+}
+#review .review-form .review-img .upload-btn:hover,
+#review_update .review-form .review-img .upload-btn:hover {
+	background: var(--main);
+	color: var(--bg);
+}
+#review .review-form .review-img input[type="file"],
+#review_update .review-form .review-img input[type="file"] {
+	display: none;
+}
+#review .review-form .review-txt input:focus,
+#review .review-form .review-txt textarea:focus,
+#review .review-form .review-txt textarea:active,
+#review_update .review-form .review-txt input:focus,
+#review_update .review-form .review-txt textarea:focus,
+#review_update .review-form .review-txt textarea:active,
+#qna .qna-form .qna-txt textarea:focus,
+#qna .qna-form .qna-txt textarea:active,
+#qna_update .qna-form .qna-txt textarea:focus,
+#qna_update .qna-form .qna-txt textarea:active {
+	border: 2px solid var(--main);
+}
+#qna .qna-cate .cate-area,
+#qna_update .qna-cate .cate-area {
+	width: 100%;
+	text-align: center;
+}
+#qna .qna-cate .cate-area .tab_oper,
+#qna_update .qna-cate .cate-area .tab_oper {
+	border: 2px solid var(--main);
+	transition: 0.2s;
+	padding: 0;
+}
+#qna .qna-cate .cate-area .tab_oper input,
+#qna_update .qna-cate .cate-area .tab_oper input {
+	display: none;
+}
+#qna .qna-cate .cate-area .tab_oper label,
+#qna_update .qna-cate .cate-area .tab_oper label {
+	padding: 1rem;
+	cursor: pointer;
+}
+#qna .qna-cate .cate-area td:hover,
+#qna .qna-cate .cate-area td.tab-active,
+#qna_update .qna-cate .cate-area td:hover,
+#qna_update .qna-cate .cate-area td.tab-active {
+	background: var(--main);
+	color: var(--bg);
+}

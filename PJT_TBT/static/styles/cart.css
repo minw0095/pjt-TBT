@@ -1,0 +1,135 @@
+@import url(./main.css);
+
+.cart__container {
+  min-height: 54vh;
+}
+
+.cart__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.1rem;
+}
+
+.cart__table th {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.cart__table tr {
+  margin-top: 0.5rem;
+  white-space: nowrap;
+}
+
+.cart__table th,
+.cart__table td {
+  vertical-align: middle;
+}
+
+.cart__table th:first-child,
+.cart__table td:first-child {
+  border-left: none;
+}
+
+.cart__table td {
+  padding: 10px;
+  height: 100%;
+}
+
+.cart__checkbox {
+  width: 5%;
+}
+
+.cart__img {
+  width: 15%;
+}
+
+.cart__name {
+  width: 50%;
+}
+
+.cart__quantity {
+  width: 20%;
+}
+
+.cart__total {
+  width: 10%;
+}
+
+.cart__trash:hover {
+  border: none;
+  transform: scale(1.2);
+  transition: all 200ms ease;
+}
+
+.bi-trash {
+  color: var(--highlight);
+}
+
+/* 수량 버튼 */
+.buy-mount-btn {
+  display: flex;
+}
+
+.minus-btn,
+.buy-mount,
+.plus-btn {
+  display: block;
+  padding: 0.4rem 1rem;
+  background-color: rgb(248, 248, 248);
+  border: 1px solid rgb(245, 245, 245);
+}
+
+.minus-btn:hover,
+.plus-btn:hover {
+  background-color: rgb(240, 240, 240);
+  cursor: pointer;
+}
+
+.cart__choice {
+  margin-top: 3rem;
+  text-align: center;
+  margin-bottom: 0.7rem;
+  font-weight: 600;
+}
+
+.total__count {
+  color: var(--main);
+}
+
+/* 결제 결과 창 */
+.cart__result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 12rem;
+  border: 2px solid var(--line);
+  border-radius: 5px;
+  margin: 3rem 0;
+}
+
+.cart__pay--choice,
+.cart__pay--total,
+.cart__pay--delivery {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.cart__btn {
+  background-color: var(--main);
+  color: var(--bg);
+  border-radius: 5px;
+  width: 8rem;
+  height: 3rem;
+}
+
+.cart__btn:hover {
+  background-color: var(--main-sub);
+  transition: all 200ms ease;
+}
+
+.cart__symbol {
+  font-size: 1.5rem;
+  font-weight: 600;
+}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block body %}
+
+  <section class="wishlist__containers">
+    <p class="title text-center fw-semibold">
+      <span class="title__user">{{ users.nickname }}</span>
+      님의 Wish List
+    </p>
+
+    {% if users.like_products.all %}
+      <!-- 버튼 -->
+      <!-- 로그인 사용자와 프로필 사용자가 같을경우 버튼 표시 -->
+      {% if request.user.pk == users.pk %}
+      <div class="wishlist__btn">
+        {% comment %} <button class="goto__cart--btn">장바구니 담기</button> {% endcomment %}
+        <button class="delete__btn" type="submit" form="like_form">
+          삭제하기
+        </button>
+      </div>
+      {% endif %}
+      <!-- 찜 목록 -->
+      <form action="" method="POST" name='delete_form' id="like_form">
+        <div class="wishlist__content wishlist__div">
+          {% if users.like_products.all %}
+            {% for product in users.like_products.all %}
+              {% csrf_token %}
+              <div class="wishlist__box">
+                <a href="{% url "products:products_detail" product.pk %}">
+                  <input class="checkbox" type="checkbox" name="answer[]" id="opt-in" value="{{ product.pk }}"/>
+                  <img class="wishlist__img" src="{{ product.product_image.all.first.image.url }}" alt="wishlist-img"/>
+                  <p class="wishlist__title">{{ product.name }}</p>
+                  <p class="wishlist__price">{{ product.pay|intcomma }}원</p>
+                </a>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+        <input type="submit" value="" name="delete_input" id="ckbox">
+      </form>
+
+      <div class="ment text-center">
+        <p class="info">
+          더 많은 상품을
+          <span class="info__wishlist">🎁위시리스트</span>에 담아보세요 :)
+        </p>
+        <p class="goto">
+          <a href={% url 'index' %}>쇼핑 바로 가기</a>
+        </p>
+      </div>
+
+    {% else %}
+      <h1 class="empty">위시리스트가 없어요 :(</h1>
+    {% endif %}
+  </section>
+
+{% endblock body %}

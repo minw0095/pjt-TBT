@@ -1,0 +1,115 @@
+@import url(./main.css);
+
+.wishlist__containers {
+  min-height: 50vh;
+  padding: 0 10%;
+}
+
+.title {
+  margin: 2rem 0;
+  font-size: 1.7rem;
+}
+
+.title__user {
+  color: var(--main);
+}
+
+/* 버튼 */
+.wishlist__btn {
+  float: right;
+}
+
+.goto__cart--btn {
+  margin-right: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  background-color: transparent;
+  color: var(--main);
+  font-weight: 600;
+  border: 2px solid var(--main);
+  border-radius: 5px;
+}
+
+.goto__cart--btn:hover {
+  background-color: var(--main);
+  color: var(--bg);
+  transition: all 300ms ease-in;
+}
+
+.delete__btn {
+  padding: 0.6rem 0.8rem;
+  background-color: transparent;
+  color: var(--highlight);
+  font-weight: 600;
+  border: 2px solid var(--highlight);
+  border-radius: 5px;
+}
+
+.delete__btn:hover {
+  background-color: var(--highlight);
+  color: var(--bg);
+  transition: all 300ms ease-in;
+}
+
+/* 찜 사진 */
+.wishlist__div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 7rem;
+  padding-bottom: 6rem;
+}
+
+.wishlist__list {
+  margin-top: 6.5rem;
+  padding-bottom: 3rem;
+  min-height: 20vh;
+}
+
+.wishlist__img {
+  width: 14rem;
+  height: 14rem;
+}
+
+.checkbox {
+  position: absolute;
+  margin-top: 0.7rem;
+  margin-left: 0.7rem;
+}
+
+.wishlist__title {
+  margin-top: 0.5rem;
+  margin-bottom: 0.1rem;
+  font-size: 1rem;
+  line-height: 1.3rem;
+}
+
+.wishlist__price {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* 하위 멘트 */
+.ment {
+  white-space: nowrap;
+  margin: 4rem 0;
+}
+
+.info {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.info__wishlist {
+  color: var(--main);
+}
+
+.goto {
+  cursor: pointer;
+  color: var(--highlight);
+  font-weight: 600;
+}
+
+.goto:hover {
+  text-decoration: underline;
+}

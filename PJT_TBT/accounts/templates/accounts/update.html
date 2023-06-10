@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load widget_tweaks %}
+
+{% block body %}
+  <div id="update">
+    <div class="tit-area">
+      <h1 class="tit">
+        회원 정보 수정</h1>
+    </div>
+    <div class='form-area'>
+      <form action="" method="POST" enctype="multipart/form-data" class="update-form">
+        {% csrf_token %}
+
+        <ul class="form-list">
+          <li>
+            <label for="nickname">닉네임</label>
+            {% render_field form.nickname %}
+          </li>
+          <li>
+            <label for="first_name">이름</label>
+            {% render_field form.first_name %}
+          </li>
+          <li>
+            <label for="last_name">성</label>
+            {% render_field form.last_name %}
+          </li>
+          <li>
+            <label for="email">이메일</label>
+            {% render_field form.email %}
+          </li>
+          <li class="img-edit">
+            <label for="profile">프로필 이미지</label>
+            {% if user.profile_image %}
+              <div class="prof_img">
+                <img src="{{user.profile_image.url}}" alt="">
+              </div>
+              <label for="file" class="upload-btn">
+                <i class="bi bi-card-image"></i>
+                <span>
+                  사진수정하기</span>
+              </label>
+              <input type="file" accept="image/*" name="profile_image" id="file"/>
+            {% else %}
+              <label for="file" class="upload-btn">
+                <i class="bi bi-card-image"></i>
+                <span>
+                  사진등록하기</span>
+              </label>
+              <input type="file" accept="image/*" name="profile_image" id="file"/>
+            {% endif %}
+          </li>
+        </ul>
+        <a class="btnC btnS " href="{% url 'accounts:changeps' %}">비밀번호 변경</a>
+        <button type="submit" class="btnC btn-sb">기본 정보 수정</button>
+      </form>
+    </div>
+    <div class="prev">
+      <p>
+        <a href="{% url 'accounts:login' %}" class="link-prev">이전페이지로</a>
+        돌아가기
+      </p>
+    </div>
+  </div>
+{% endblock body %}

@@ -1,0 +1,244 @@
+@import url(./main.css);
+
+/* 시즌 상품 */
+#home .tit {
+	margin-bottom: 2rem;
+	font-size: 1.5rem;
+	font-weight: 700;
+}
+
+/* 시즌 상품 더보기*/
+#home .season-more {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#home .season-more-btn {
+	margin-bottom: 2rem;
+	color: var(--main-sub);
+	font-weight: 700;
+}
+
+#home .season-more-btn:hover {
+	color: var(--main);
+}
+
+#home .sec {
+	margin: 8rem 0 0;
+}
+
+#home .sec .item-area {
+	display: flex;
+}
+.slide-area {
+	margin: 0 auto;
+	text-align: center;
+}
+.slide-area .slider {
+	position: relative;
+	height: 600px;
+	overflow: hidden;
+}
+.slide-area .slider .slide {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	object-fit: contain;
+	transition: transform 1s;
+}
+.slide-area .slider .slider-btn {
+	position: absolute;
+	top: 45%;
+	z-index: 10;
+	font-family: inherit;
+	color: rgba(255, 255, 255, 0.7);
+	height: 5.5rem;
+	width: 5.5rem;
+	font-size: 3rem;
+	cursor: pointer;
+}
+.slide-area .slider .slider-btn-left {
+	left: 5%;
+	transform: translate(-50%, -50%);
+}
+.slide-area .slider .slider-btn-right {
+	right: 5%;
+	transform: translate(50%, -50%);
+}
+.slide-area .slider .dots {
+	position: absolute;
+	bottom: 4%;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+}
+.slide-area .slider .dots .dots-dot {
+	border: none;
+	background-color: var(--line);
+	opacity: 0.7;
+	height: 1rem;
+	width: 1rem;
+	border-radius: 50%;
+	margin-right: 1.75rem;
+	box-shadow: 0 0.6rem 1.5rem rgba(0, 0, 0, 0.7);
+	cursor: pointer;
+	transition: all 0.5s;
+}
+.slide-area .slider .dots .dots-dot:last-child {
+	margin: 0;
+}
+.slide-area .slider .dots .dots-dot-active {
+	background-color: var(--main);
+	opacity: 1;
+}
+
+.sec .item {
+	padding: 0 1rem;
+}
+.item .img-area {
+	overflow: hidden;
+	position: relative;
+}
+.item .img-area img {
+	transition: all 0.5s ease;
+}
+.item .img-area .overlay {
+	background: linear-gradient(
+		180deg,
+		rgba(0, 0, 0, 0) 0%,
+		rgba(0, 0, 0, 0.5) 100%
+	);
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.item .img-area:hover img {
+	transform: scale(1.2);
+}
+
+.season__items {
+	justify-content: center;
+}
+
+.sale-tag {
+	position: absolute;
+	display: table;
+	top: 5%;
+	left: 80%;
+	width: 3.5rem;
+	height: 3.5rem;
+	background-color: var(--highlight);
+	border-radius: 50%;
+	z-index: 2;
+}
+
+.sale-per {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	font-size: 1.2rem;
+	font-weight: 600;
+	color: var(--bg);
+}
+
+.item-tit,
+.item-price {
+	margin-top: 1rem;
+	text-align: center;
+	font-size: 1.2rem;
+}
+
+.item-price {
+	margin-left: 4.5rem;
+}
+
+.origin__price {
+	text-decoration: line-through;
+}
+
+.discount__price {
+	margin-left: 0.5rem;
+	color: var(--highlight);
+}
+
+/* event */
+.event {
+	text-align: center;
+}
+
+.discount__title--area {
+	margin-top: 2rem;
+	margin-right: 3rem;
+}
+
+.discount__title {
+	white-space: nowrap;
+	color: var(--main);
+}
+
+.discount__subtitle {
+	display: inline-block;
+	padding-bottom: 0.6rem;
+	border-bottom: 4px solid var(--highlight);
+}
+
+.day {
+	color: var(--highlight);
+	font-weight: 600;
+}
+.sale-item .item .img-area {
+	border-radius: 50%;
+}
+
+.discount__price {
+	margin-left: 0;
+	color: var(--highlight);
+	font-weight: 600;
+}
+
+/* md */
+.md-item {
+	position: relative;
+	margin-bottom: 4rem;
+}
+
+.md__title--container {
+	display: table;
+	margin-right: 6.2rem;
+}
+
+.md__title--area {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.mb__title {
+	color: var(--main);
+}
+
+.md__subtitle2 {
+	margin-top: 0.5rem;
+	white-space: nowrap;
+	display: inline-block;
+	padding-bottom: 0.6rem;
+	border-bottom: 4px solid var(--main);
+}
+
+.md__category {
+	position: absolute;
+	top: 70%;
+	left: 10%;
+	color: var(--bg);
+	font-weight: 700;
+	font-size: 1.5rem;
+}
+
+.md__img {
+	width: 500px;
+	height: 200px;
+	object-fit: cover;
+}

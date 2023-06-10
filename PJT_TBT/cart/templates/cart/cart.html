@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load index_tag %}
+{% load mathfilters %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'styles/orders_ordering.css' %}">
+{% endblock css %}
+
+<!-- 장바구니 body-->
+{% block body %}
+  <section class="cart__container">
+    <div class='text-center'>
+      <p class="title text-center fw-semibold">
+        <span class="title__user">{{ user.nickname }}</span>
+        님의 장바구니
+      </p>
+    </div>
+    {% if not cart_items %}
+      <div class='text-center pt-4'>
+        <h1 class="empty mb-3">장바구니에 담긴 상품이 없어요 :(</h1>
+        <p class='text-center'>
+          쇼핑을 더하려면
+          <a class="goto" href="{% url 'index' %}">메인페이지</a>
+          를 클릭하세요</p>
+      </div>
+    {% else %}
+      {% comment %} //여기요 {% endcomment %}
+      {% for cart_item in cart_items %}
+        <div class="purchase-pdt-item row">
+          <div class="col-1 cart__checkbox pdt-checkbox">
+            <input class='checkbox-{{ cart_item.product.pk }}' type="checkbox" checked="true" id="my_checkbox" name="choice" onclick='getCheck(event)' data-pdt='{{ cart_item.product.pk }}'></div>
+          <div class='col-1'>
+            <a class="purchase-pdt-img-wrap">
+              <img class="purchase-pdt-img" src="{{ cart_item.product.product_image.all.first.image.url }}" alt="">
+            </a>
+          </div>
+          <div class='col-5 pdt-info'>
+            <a>
+              <p class="pdt-name text-break">{{ cart_item.product.name }}</p>
+            </a>
+            <div class='pdt-price'>
+              {% if item.product.sale != 0 %}
+                <span class='pdt-sale'>{{ cart_item.product.sale }}%</span>
+              {% endif %}
+              <span>{{ cart_item.product.pay|discount:cart_item.product.sale|intcomma }}원</span>
+              {% if item.product.sale != 0 %}
+                <del class='before-sale'>{{ cart_item.product.pay }}원</del>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-3 cart__quantity pdt-count-info">
+            <div class=" buy-mount-btn">
+              <span class='minus-btn' onclick='minus(event)'>-</span>
+              <span class='buy-mount mount-{{ cart_item.product.pk }}'>{{ cart_item.quantity }}</span>
+              <span class='plus-btn' onclick="plus(event)">+</span>
+            </div>
+          </div>
+          <div class='col-2 pdt-mount-info'>
+            <span class='total-purchase-price mb-2' data-price='{{ cart_item.product.pay }}' data-sale='{{ cart_item.product.sale }}' data-delivery='{{ cart_item.product.delivery }}' data-total='{{cart_item.product.pay|discount:cart_item.product.sale|mul:cart_item.quantity }}' data-pdt-pk='{{ cart_item.product.pk }}'>{{cart_item.product.pay|discount:cart_item.product.sale|mul:cart_item.quantity|intcomma }}원</span>
+            <p class="pdt-delivery" data-delivery='{{ cart_item.product.delivery }}'>
+              <i class="bi bi-truck"></i>
+               {% if cart_item.product.delivery != '0' %}
+               {{ cart_item.product.delivery }}원
+              {% else %}
+                무료배송
+              {% endif %}
+            </p>
+          </div>
+          <div class='col-1 pdt-trash'>
+          <button class="cart__trash" type="submit" form="cart_form">
+            <a href="{% url "cart:cart_remove" cart_item.product.id %}">
+              <i class="bi bi-trash"></i>
+            </a>
+          </button>
+        </div>
+        </div>
+        {% endfor %}
+
+        <p class="cart__choice">총
+          <span id="count__result" class="total__count">0</span>
+          개의 상품을 선택하셨습니다.
+        </p>
+
+       <div class="row cart__result">
+        <div class="col-2">
+        </div>
+        <div class="col-2 text-center">
+          <p class="cart__pay--choice">선택 상품 금액</p>
+          <p id="choice__total">0원</p>
+        </div>
+        <div class="col-1">
+          <p class="cart__symbol">+</p>
+        </div>
+        <div class="col-2 text-center">
+          <p class="cart__pay--delivery">배송비</p>
+          <p id="tot-delivery">0원</p>
+        </div>
+        <div class="col-1">
+          <p class="cart__symbol">=</p>
+        </div>
+        <div class="col-2 text-center">
+          <p class="cart__pay--total">총 결제 예상 금액</p>
+          <p id="total">0원</p>
+        </div>
+        <div class="col-2">
+        </div>
+       </div>
+
+       <div class="text-center mb-5">
+       <form action="{% url 'orders:index' %}" method='POST'>
+        {% csrf_token %}
+        <input type="hidden" id="pdt_to_buy" name="pdt_to_buy" value=''>
+        <input type="hidden" id="mount_per_pdt" name="mount_per_pdt" value=''>
+        <input class="cart__btn" type="submit" value='주문 하기'>
+      </form>
+      </div>
+      {% endif %}
+    </section>
+    <script>
+      //선택
+      const totalPurchasePrices = document.querySelectorAll('.total-purchase-price')
+
+      //innerText
+      const choiceTotal = document.querySelector('#choice__total')
+      const deliveryTotal = document.querySelector('#tot-delivery')
+      const total = document.querySelector('#total')
+      const selectTotalCnt = document.querySelector('#count__result')
+
+      // 선택 금액 합산
+      const getChoicePurchase = () => {
+        let totalChoicePrice = 0
+        for(let i=0; i<totalPurchasePrices.length; i++){
+          const checkboxPdtPk = totalPurchasePrices[i].dataset.pdtPk
+          const checkbox = document.querySelector(`.checkbox-${checkboxPdtPk}`)
+          const isChecked = checkbox.checked
+          
+          if (isChecked) {
+            totalChoicePrice += parseInt(totalPurchasePrices[i].innerText.slice(0, -1).replace(",", ""))
+          }
+        }
+        choiceTotal.innerText = `${(totalChoicePrice).toLocaleString('ko-KR')}원`
+      }
+
+      // 배송비 합산
+      let totalDeliveryPrice = 0
+      for(let i=0; i<totalPurchasePrices.length; i++){
+        totalDeliveryPrice += parseInt(totalPurchasePrices[i].dataset.delivery)
+      }
+      deliveryTotal.innerText = `${(totalDeliveryPrice).toLocaleString('ko-KR')}원`
+
+      // 총 합산 (선택 + 배송비)
+      const getTotal = () => {
+        let totalChoiceTotal = parseInt(choiceTotal.innerText.slice(0, -1).replace(",", ""))
+        let totalDeliveryPrice = parseInt(deliveryTotal.innerText.slice(0, -1).replace(",", ""))
+        total.innerText = `${(totalChoiceTotal + totalDeliveryPrice).toLocaleString('ko-KR')}원`
+      }
+
+      // 해당 상품 세일 적용된 가격 구하는 함수
+      const calTotPurchasePrice =  (totalPurchasePrice, pdtPrice, sale, mount) => {
+        if (mount !== 0) {
+          totalPurchasePrice.innerText = `${ (pdtPrice * (100 - sale) * 0.01 * mount).toLocaleString('ko-KR')}원`
+        } else {
+          totalPurchasePrice.innerText = '0원'
+        }
+      }
+
+      // 선택 상품 가져오는 함수
+      const checkboxCnt = () => {
+        const query = 'input[name="choice"]:checked';
+        const selectedElements = document.querySelectorAll(query);
+        const selectedElementsCnt = Number(selectedElements.length);
+    
+        selectTotalCnt.innerText = selectedElementsCnt;
+      }
+
+      // 체크 박스 버튼 이벤트
+      const getCheck = (event) => {
+        checkboxCnt()
+
+        const checkbox = event.target
+        const is_checked = checkbox.checked;
+        
+        const selectPriceElement = event.target.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.firstElementChild
+        let selectPrice = parseInt(selectPriceElement.innerText.slice(0, -1).replace(",", ""))
+        let choicePrice = parseInt(choiceTotal.innerText.slice(0, -1).replace(",", ""))
+        const delivery = Number(selectPriceElement.dataset.delivery)
+
+        if(is_checked){
+          choicePrice += selectPrice
+          totalDeliveryPrice += delivery
+          
+        } else {
+          choicePrice -= selectPrice
+          totalDeliveryPrice -= delivery
+         }
+        
+        choiceTotal.innerText = `${ (choicePrice).toLocaleString('ko-KR')}원`
+        deliveryTotal.innerText = `${(totalDeliveryPrice).toLocaleString('ko-KR')}원`
+        total.innerText = `${ (choicePrice + totalDeliveryPrice).toLocaleString('ko-KR')}원`
+      }
+
+      // 플러스 버튼 이벤트
+      const plus = (event) => {
+        const buyMount = event.target.previousElementSibling
+        buyMount.innerText = parseInt(buyMount.innerText) + 1
+
+        const mount = parseInt(buyMount.innerText)
+        const totalPurchasePrice = event.target.parentElement.parentElement.nextElementSibling.firstElementChild
+        const pdtPrice = parseInt(totalPurchasePrice.dataset.price)
+        const sale = parseInt(totalPurchasePrice.dataset.sale)
+
+        calTotPurchasePrice(totalPurchasePrice, pdtPrice, sale, mount)
+        getChoicePurchase()
+        getTotal()
+      }
+
+      // 마이너스 버튼 이벤트
+      const minus = (event) => {
+        const buyMount = event.target.nextElementSibling
+        if (parseInt(buyMount.innerText) - 1 >= 1) {
+          buyMount.innerText = parseInt(buyMount.innerText) - 1
+        }
+
+        const mount = parseInt(buyMount.innerText)
+        const totalPurchasePrice = event.target.parentElement.parentElement.nextElementSibling.firstElementChild
+        const pdtPrice = parseInt(totalPurchasePrice.dataset.price)
+        const sale = parseInt(totalPurchasePrice.dataset.sale)
+        let delivery = parseInt(totalPurchasePrice.dataset.delivery)
+  
+        calTotPurchasePrice(totalPurchasePrice, pdtPrice, sale, mount)
+        getChoicePurchase()
+        getTotal()
+      }
+
+      // 주문하기 버튼 눌렀을 때, 구매해야할 상품 정보랑 각 수량 정보 넘기기
+      const cartBtn = document.querySelector('.cart__btn')
+      cartBtn.addEventListener('click', function(){
+        const pdtsToBuyInput = document.querySelector('#pdt_to_buy')
+        const mountPerPdtsInput = document.querySelector('#mount_per_pdt')
+  
+        const query = 'input[name="choice"]:checked';
+        const selectedElements = document.querySelectorAll(query);
+  
+        let pdtsToBuyInfo = []
+        let mountPerPdtsInfo = []
+      
+        for (let selectedElement of selectedElements) {
+          selectedPdtPk = selectedElement.dataset.pdt;
+          pdtsToBuyInfo.push(selectedElement.dataset.pdt)
+  
+          selectedPdtMountTag = document.querySelector(`.mount-${selectedPdtPk}`)
+          mountPerPdtsInfo.push(selectedPdtMountTag.innerText)
+        }
+        pdtsToBuyInput.value = pdtsToBuyInfo
+        mountPerPdtsInput.value = mountPerPdtsInfo
+      })
+
+      // 함수 실행
+      checkboxCnt()
+      getChoicePurchase()
+      getTotal()
+
+    </script>
+
+  {% endblock body %}

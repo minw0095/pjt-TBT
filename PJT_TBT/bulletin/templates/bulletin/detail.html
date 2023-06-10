@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block body %}
+{% for q in question %}
+<p>문의유형:{{q.category}}</p>
+<p>내용:{{q.content}}</p>
+<p>생성일자:{{q.create_at}}</p>
+<p>작성자:{{q.account.nickname}}</p>
+<p>문의확인:{% if q.check == 0 %}아직 답변이 없습니다.{% else %} {{q.answer_set.all.count}}개의 답변이 있습니다! {% endif %}</p>
+<a href="{% url 'bulletin:createA' q.pk %}">답변달기</a>
+<p><a href="{% url 'bulletin:deleteQ' q.pk %}">지우실건갑쇼</a></p>
+{% for a in q.answer_set.all %}
+<hr>
+<p>답변내용</p>
+<p>{{a.content}}</p>
+<p>{{a.account}}</p>
+<p><a href="{% url 'bulletin:deleteA' a.pk %}">지우실건갑쇼</a></p>
+{% endfor %}
+{% endfor %}
+{% endblock body %}

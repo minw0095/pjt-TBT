@@ -1,0 +1,940 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% load humanize %}
+{% load index_tag %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'styles/product_detail.css' %}">
+{% endblock css %}
+
+{% block body %}
+{% comment %} breadcrumb {% endcomment %}
+<nav class='pdt-breadcrumb'
+  style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);"
+  aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="/">홈</a>
+    </li>
+    <li class="breadcrumb-item">
+      {% if product.category == '노트/메모지' %}
+      <a href="{% url 'products:note' %}">
+        {{ product.category }}
+      </a>
+      {% elif product.category == '다이어리' %}
+      <a href="{% url 'products:diary' %}">
+        {{ product.category }}
+      </a>
+      {% elif product.category == '필기류/필통' %}
+      <a href="{% url 'products:pencil' %}">
+        {{ product.category }}
+      </a>
+      {% elif product.category == '파일/바인더' %}
+      <a href="{% url 'products:file' %}">
+        {{ product.category }}
+      </a>
+      {% elif product.category == '크리스마스 카드' %}
+      <a href="{% url 'products:card' %}">
+        {{ product.category }}
+      </a>
+      {% elif product.category == '크리스마스 리스' %}
+      <a href="{% url 'products:wreath' %}">
+        {{ product.category }}
+      </a>
+      {% elif product.category == '크리스마스 트리 장식' %}
+      <a href="{% url 'products:decoration' %}">
+        {{ product.category }}
+      </a>
+      {% endif %}
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+  </ol>
+</nav>
+<main id="product-detail">
+  {% comment %} 상품 정보 {% endcomment %}
+  <section class='row row-cols-2'>
+    {% comment %} 상품 이미지 {% endcomment %}
+    <div class='col'>
+      <div class='row g-1'>
+        <div class='col-2'>
+          {% for productimage in product.product_image.all %}
+          <img class='pdt-img' src="{{ productimage.image.url }}" alt="">
+          {% endfor %}
+        </div>
+        <div class='col-10 img-magnifier-container'>
+          <div class="img-magnifier-glass"></div>
+          <img id="myimage" class='pdt-first-img' src="{{product.product_image.all.0.image.url }}" alt="">
+        </div>
+      </div>
+    </div>
+    {% comment %} 상품 기본 정보 {% endcomment %}
+    <div class='col'>
+      <div class='pdt-category-like'>
+        <p class='pdt-category'>{{ product.category }}</p>
+        <!-- 찜하기 비동기 구현 -->
+        {% if request.user.is_authenticated %}
+        <div class='pdt-like'>
+          <form class="like-forms" data-product-id="{{ product.pk }}">
+            {% csrf_token %}
+            {% if user in product.like_users.all %}
+            <button type="submit" class="" id="like-{{ product.pk }}">
+              <i id="heart-{{ product.pk }}" class="bi bi-bookmark-heart-fill"></i>
+            </button>
+            {% else %}
+            <button type="submit" class="" id="like-{{ product.pk }}">
+              <i id="heart-{{ product.pk }}" class="bi bi-bookmark-heart"></i>
+            </button>
+            {% endif %}
+          </form>
+          <div id="heart-count">
+            <p>{{ product.like_users.count }}</p>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      <p class='pdt-name'>{{ product.name }}</p>
+      <hr>
+      <div class='pdt-price'>
+        {% if product.sale != 0 %}
+        <span class='pdt-sale'>{{ product.sale }}%</span>
+        {% endif %}
+        <span class='pdt-pay'>{{ product.pay|discount:product.sale|intcomma }}원</span>
+        {% if product.sale != 0 %}
+        <del class='before-sale'>{{ product.pay|intcomma }}원</del>
+        {% endif %}
+      </div>
+      <div class='stars-container'>
+        <div class='stars'>
+          <div class='stars-background'>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+          </div>
+          <div class='stars-color' data-avg-grade='{{ total.review_avg|floatformat }}'>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+            <i class="bi bi-star-fill"></i>
+          </div>
+        </div>
+        <div class='pdt-review-cnt-wrap'>
+          <span class='pdt-review-cnt'>{{ reviews.count }}</span>개의 리뷰
+        </div>
+      </div>
+      <table class='purchase-table'>
+        <tr>
+          <th>배송비</th>
+          <td>
+            <i class="bi bi-truck"></i>
+            {% if product.delivery != '0' %}
+            {{ product.delivery|intcomma }}원
+            {% else %}
+            템템무료배송
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>수량</th>
+          <td class='buy-mount-btn'>
+            <span class='minus-btn'>-</span>
+            <span class='buy-mount'>1</span>
+            <span class='plus-btn'>+</span>
+          </td>
+        </tr>
+      </table>
+      <div class='total-purchase-price-wrap'>
+        <span>주문 금액</span>
+        <span class='total-purchase-price' data-delivery='{{ product.delivery }}' data-price='{{ product.pay }}'
+          data-sale='{{ product.sale }}'>원</span>
+      </div>
+      <div class='basket-buy-btn-wrap'>
+        {% comment %} 장바구니 버튼 {% endcomment %}
+        <form action="{% url 'cart:add_cart' product.pk %}" method='POST' class='basket-btn-form'>
+          {% csrf_token %}
+          <input type="hidden" name="buy-mount" value='1' class='basket-btn-mount'>
+          {% comment %} 수량=0일 때, 모달창 뜨게 {% endcomment %}
+          <!-- Button trigger modal -->
+          <button type='button' class="basket-btn basket-btn-modal" data-bs-toggle="modal"
+            data-bs-target="#exampleModal">
+            장바구니
+          </button>
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">⛔ 수량을 선택하세요.</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  장바구니로 이동할 상품이 없습니다.
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% comment %} 수량!=0일 때, submot 가능하게 {% endcomment %}
+          <input class='basket-btn basket-btn-submit active' type="submit" value='장바구니'>
+        </form>
+        {% comment %} 바로구매 버튼 {% endcomment %}
+        <form action="{% url 'orders:index' %}" method='POST' class='buy-btn-form'>
+          {% csrf_token %}
+          <input type="hidden" class="pdt_to_buy" name="pdt_to_buy" value='{{ product.pk }}'>
+          <input type="hidden" class="mount_per_pdt" name="mount_per_pdt" value='1'>
+          {% comment %} 수량=0일 때, 모달창 뜨게 {% endcomment %}
+          <!-- Button trigger modal -->
+          <button type='button' class="buy-btn buy-btn-modal" data-bs-toggle="modal" data-bs-target="#buyModal">
+            바로구매
+          </button>
+          <!-- Modal -->
+          <div class="modal fade" id="buyModal" tabindex="-1" aria-labelledby="buyModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="buyModalLabel">⛔ 수량을 선택하세요.</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  결제 페이지로 이동할 상품이 없습니다.
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% comment %} 수량!=0일 때, submot 가능하게 {% endcomment %}
+          <input class="buy-btn buy-btn-submit active" type="submit" value='바로구매'>
+        </form>
+      </div>
+    </div>
+  </section>
+  {% comment %} 상품정보/리뷰/문의/추천 탭 {% endcomment %}
+  <section>
+    {% comment %} 탭 {% endcomment %}
+    <ul class='pdt-4tab'>
+      <li class='tab active'>
+        <a href="#pdt-info">상품정보</a>
+      </li>
+      <li class='tab'>
+        <a href="#pdt-review">리뷰
+          <span class='small-count'>{{ reviews.count }}</span>
+        </a>
+      </li>
+      <li class='tab'>
+        <a href="#pdt-qna">문의
+          <span class='small-count'>{{ questions.count }}</span>
+        </a>
+      </li>
+      <li class='tab'>
+        <a href="#pdt-recommend">추천</a>
+      </li>
+    </ul>
+    <div class='row g-2'>
+      <div class='col-8'>
+        {% comment %} 상품정보 {% endcomment %}
+        <article id='pdt-info'>
+          <h3>상품정보</h3>
+          <p class='pdt-description-text'>{{ product.Description1 }}</p>
+          <img src="{{ product.Description2.url }}" alt="">
+        </article>
+        {% comment %} 리뷰 {% endcomment %}
+        <article id='pdt-review'>
+          <div class="pdt-rev-titarea">
+            <h3>리뷰 <span class='small-count'>{{ reviews.count }}</span></h3>
+            <p id="rev-modal-btn">리뷰쓰기</p>
+          </div>
+          <div class='review-grade-wrap'>
+            <div class='stars-container'>
+              <div class='stars'>
+                <div class='stars-background'>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                </div>
+                <div class='stars-color' data-avg-grade='{{ total.review_avg|floatformat }}'>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                </div>
+              </div>
+              <div class='avg-grade'>
+                {% if total.review_avg %}
+                {{ total.review_avg }}
+                {% else %}
+                {{ 0 }}
+                {% endif %}
+              </div>
+            </div>
+            <div class='grade-bar-container d-none d-lg-block'>
+              <div class='grade-bar-item'>
+                <span>5점</span>
+                <div class='grade-bar'>
+                  <div class='grade-bar-background'>
+                  </div>
+                  <div class='grade-bar-color-wrap'>
+                    <div class='grade-bar-color'></div>
+                  </div>
+                </div>
+                <span class='pdt-review-grade-count'>{% if grades_5.0 %}{{grades_5.0.gra}}{% else %}0{% endif %}</span>
+              </div>
+              <div class='grade-bar-item'>
+                <span>4점</span>
+                <div class='grade-bar'>
+                  <div class='grade-bar-background'>
+                  </div>
+                  <div class='grade-bar-color-wrap'>
+                    <div class='grade-bar-color'></div>
+                  </div>
+                </div>
+                <span class='pdt-review-grade-count'> {% if grades_4.0 %}{{grades_4.0.gra}}{% else %}0{% endif %}</span>
+              </div>
+              <div class='grade-bar-item'>
+                <span>3점</span>
+                <div class='grade-bar'>
+                  <div class='grade-bar-background'>
+                  </div>
+                  <div class='grade-bar-color-wrap'>
+                    <div class='grade-bar-color'></div>
+                  </div>
+                </div>
+                <span class='pdt-review-grade-count'>{% if grades_3.0 %}{{grades_3.0.gra}}{% else %}0{% endif %}</span>
+              </div>
+              <div class='grade-bar-item'>
+                <span>2점</span>
+                <div class='grade-bar'>
+                  <div class='grade-bar-background'>
+                  </div>
+                  <div class='grade-bar-color-wrap'>
+                    <div class='grade-bar-color'></div>
+                  </div>
+                </div>
+                <span class='pdt-review-grade-count'>{% if grades_2.0 %}{{grades_2.0.gra}}{% else %}0{% endif %}</span>
+              </div>
+              <div class='grade-bar-item'>
+                <span>1점</span>
+                <div class='grade-bar'>
+                  <div class='grade-bar-background'>
+                  </div>
+                  <div class='grade-bar-color-wrap'>
+                    <div class='grade-bar-color'></div>
+                  </div>
+                </div>
+                <span class='pdt-review-grade-count'>{% if grades_1.0 %}{{grades_1.0.gra}}{% else %}0{% endif %}</span>
+              </div>
+            </div>
+          </div>
+          <div id="review-area">
+            {% if reviews %}
+            {% for review in reviews %}
+            <div class="rev-sec">
+              <div class="rev-prof-img">
+                <a href="{% url 'accounts:detail' review.account.pk %}">
+                  {% if review.account.profile_image %}
+                  <img class="profile__img" src="{{review.account.profile_image.url}}" alt="profile-img" />
+                  {% else %}
+                  <img class="profile__img" src="{% static 'img/profile_dummy.jpg' %}" alt="profile-img" />
+                  {% endif %}
+                </a>
+              </div>
+              <div class="rev-main">
+                <div class="rev-header">
+                  <p class="rev-user">{{review.account.nickname}}</p>
+                  <p class="rev-date">{{review.created_at|date:'Y.m.d' }}</p>
+                  <p class="rev-rate">
+                    <i
+                      class="bi bi-star{% if review.grade >= 1 %}-fill{% elif 0 < review.grade and review.grade < 1 %}{% endif %}"></i>
+                    <i
+                      class="bi bi-star{% if review.grade >= 2 %}-fill{% elif 0 < review.grade and review.grade < 2 %}{% endif %}"></i>
+                    <i
+                      class="bi bi-star{% if review.grade >= 3 %}-fill{% elif 0 < review.grade and review.grade < 3 %}{% endif %}"></i>
+                    <i
+                      class="bi bi-star{% if review.grade >= 4 %}-fill{% elif 0 < review.grade and review.grade < 4 %}{% endif %}"></i>
+                    <i
+                      class="bi bi-star{% if review.grade >= 5 %}-fill{% elif 0 < review.grade and review.grade < 5 %}{% endif %}"></i>
+                  </p>
+                  {% if request.user.is_authenticated and request.user.pk == review.account.pk %}
+                  <div class="rev-btn">
+                    <a href="{% url 'reviews:update' review.pk %}" class="btn-modal-update"
+                      data-cnt="{{ forloop.counter}}">수정</a>
+                    <a href="{% url 'reviews:delete' review.pk %}" class="btn-modal-delete">삭제</a>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="rev-body">
+                  <p>{{review.title}}</p>
+                  <p class="rev-cont">
+                    {{review.content}}
+                  </p>
+                  {% if review.review_image %}
+                  {% comment %} <img src="{{ review.thumbnail.url }}" alt="{{review.review_image}}" class="rev-img"> {% endcomment %}
+                  <div class="overlayC2 hidden">
+                    <button class="btn-close btn-close-img">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                    <img src="{{ review.review_image.url }}" alt="{{review.review_image}}" class="rev-img-popup">
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="rev-footer">
+                  {% if request.user in review.like.all %}
+                  <button class="like-btn like-active">
+                    <i class="bi bi-hand-thumbs-up-fill" data-review-id="{{ review.pk }}"></i>
+                    <span class="like-cnt">
+                      {{review.like.count}}
+                    </span>
+                  </button>
+                  {% else %}
+                  <button class="like-btn">
+                    <i class="bi bi-hand-thumbs-up" data-review-id="{{ review.pk }}"></i>
+                    <span class="like-cnt">
+                      {{review.like.count}}
+                    </span>
+                  </button>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="rev-sec">
+              <p class="rev-empt">아직 작성된 리뷰가 없어요 :(</p>
+            </div>
+            {% endif %}
+          </div>
+        </article>
+        {% comment %} 문의 {% endcomment %}
+        <article id='pdt-qna'>
+          <div class="pdt-qna-titarea">
+            <h3>문의 <span class='small-count'>{{ questions.count }}</span></h3>
+            <p class="qna-modal-btn">문의하기</p>
+          </div>
+          <div id="qna-area">
+            {% if questions %}
+            {% for question in questions %}
+            <div class="qna-sec">
+              <div class="qna-header">
+                <p class="qna-info">
+                  <span>구매 |</span>
+                  <span>{{question.category}} |</span>
+                  {% if question.check %}
+                  <span class="qna-status">답변</span>
+                  {% else %}
+                  <span>미답변</span>
+                  {% endif %}
+                </p>
+                <p class="qna-user">
+                  <span>{{question.account.nickname}}</span>
+                  <span>{{question.create_at|date:'Y.m.d' }}</span>
+                </p>
+                {% if request.user.is_authenticated and request.user.pk == question.account.pk %}
+                <div class="qna-btn">
+                  <a href="{% url 'bulletin:updateA' question.pk %}" class="btn-modal-update-qna"
+                    data-cnt="{{ forloop.counter}}">수정</a>
+                  <a href="{% url 'bulletin:deleteQ' question.pk %}" class="btn-modal-delete-qna">삭제</a>
+                </div>
+                {% endif %}
+              </div>
+              <div class="qna-main">
+                <div class="qna-cont qna-q">
+                  <span>Q.</span>
+                  <p>{{question.content}}</p>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            <!-- {% if answers %}
+            {% for answer in answers %}
+            <div class="qna-cont qna-a">
+              <span>A.</span>
+              <p>{{answer.content}}</p>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="qna-cont">
+              <p>답변 대기중</p>
+            </div>
+            {% endif %} -->
+            {% else %}
+            <div class="qna-sec">
+              <p>작성된 문의가 없습니다.</p>
+            </div>
+            {% endif %}
+          </div>
+        </article>
+        {% comment %} 추천 {% endcomment %}
+        <article id='pdt-recommend'>
+          <h3>추천</h3>
+          <div class='pdt-list row row-cols-1 row-cols-md-2 row-cols-lg-3 gx-0 gy-3'>
+            {% for product in recommend_products %}
+            <div class='col'>
+              <div class='pdt-item'>
+                <a class='pdt-item-img-wrap' href="{% url 'products:products_detail' product.pk %}">
+                  <img class='pdt-item-img' src="{{ product.product_image.all.0.image.url }}" alt="">
+                </a>
+                <a class='pdt-item-name' href="{% url 'products:products_detail' product.pk %}">
+                  {{ product.name }}
+                </a>
+                <div class='pdt-item-price'>
+                  {% if product.sale != 0 %}
+                  <del class='before-sale'>{{ product.pay|intcomma }}원</del>
+                  {% endif %}
+                  <span class='pdt-pay'>{{ product.pay|discount:product.sale|intcomma }}원</span>
+                </div>
+                {% if product.sale != 0 %}
+                <div class='pdt-sale-badge'>
+                  {{ product.sale }}%
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </article>
+        {% comment %} superuser인 경우만, 상품 수정/삭제 가능 {% endcomment %}
+        <article id='superuser-power'>
+          {% if request.user.is_superuser %}
+          <h3>SuperUser이신가요?</h3>
+          <a class="btn btn-primary" href="{% url 'products:products_update' product.pk %}">상품 정보 수정</a>
+          <form class="btn btn-danger" action="{% url 'products:products_delete' product.pk  %}" method="POST">
+            {% csrf_token %}
+            <!-- 상품 삭제 Button trigger modal -->
+            <button type="button" class="m-0 p-0" data-bs-toggle="modal" data-bs-target="#pdtDelete">
+              상품 삭제
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="pdtDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5 text-dark" id="exampleModalLabel">
+                      상품을 정말 삭제하시겠습니까?
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p class='text-dark'>상품을 삭제하면 관련 리뷰, 문의 모두 사라집니다.</p>
+                    <p class='text-dark'>정말로 삭제하시겠습니까?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="submit" class="btn btn-danger">삭제</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          {% endif %}
+        </article>
+      </div>
+      <div class='col-4'>
+        <div class='basket-buy-btn-wrap small'>
+          {% comment %} 장바구니 버튼 {% endcomment %}
+          <form action="{% url 'cart:add_cart' product.pk %}" method='POST' class='basket-btn-form'>
+            {% csrf_token %}
+            <input type="hidden" name="buy-mount" value='1' class='basket-btn-mount'>
+            {% comment %} 수량=0일 때, 모달창 뜨게 {% endcomment %}
+            <!-- Button trigger modal -->
+            <button type='button' class="basket-btn basket-btn-modal" data-bs-toggle="modal"
+              data-bs-target="#exampleModal">
+              장바구니
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">⛔ 수량을 선택하세요.</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    장바구니로 이동할 상품이 없습니다.
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% comment %} 수량!=0일 때, submot 가능하게 {% endcomment %}
+            <input class='basket-btn basket-btn-submit active' type="submit" value='장바구니'>
+          </form>
+          {% comment %} 바로구매 버튼 {% endcomment %}
+          <form action="{% url 'orders:index' %}" method='POST' class='buy-btn-form'>
+            {% csrf_token %}
+            <input type="hidden" class="pdt_to_buy" name="pdt_to_buy" value='{{ product.pk }}'>
+            <input type="hidden" class="mount_per_pdt" name="mount_per_pdt" value='1'>
+            {% comment %} 수량=0일 때, 모달창 뜨게 {% endcomment %}
+            <!-- Button trigger modal -->
+            <button type='button' class="buy-btn buy-btn-modal" data-bs-toggle="modal" data-bs-target="#buyModal">
+              바로구매
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="buyModal" tabindex="-1" aria-labelledby="buyModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="buyModalLabel">⛔ 수량을 선택하세요.</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    결제 페이지로 이동할 상품이 없습니다.
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% comment %} 수량!=0일 때, submot 가능하게 {% endcomment %}
+            <input class="buy-btn buy-btn-submit active" type="submit" value='바로구매'>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% comment %} 리뷰/문의 모달 {% endcomment %}
+  <section>
+    <div class="overlayC hidden">
+      <!--리뷰 모달-->
+      <div id="review" class="modalC hidden">
+        <div class="tit-area">
+          <h1 class="tit">리뷰 쓰기</h1>
+          <button class="btn-close btn-close-rev">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="item-area sect">
+          <div class="img-area">
+            <img src="{{product.product_image.all.0.image.url }}" alt="">
+          </div>
+          <div class="info">
+            <p>{{ product.category }}</p>
+            <h3 class="sub-tit">{{ product.name }}</h3>
+          </div>
+        </div>
+        <div class="form-area ">
+          <form action="{% url 'reviews:create' product.pk %}" class="review-form" method='POST'
+            enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="rate-area sect">
+              <h4 class="sub-tit">별점<span>*</span></h4>
+              <div class="rate-stars">
+                <input type="radio" name="grade" id="rate-5" value="5">
+                <label for="rate-5">
+                  <i class="bi bi-star-fill"></i>
+                </label>
+                <input type="radio" name="grade" id="rate-4" value="4">
+                <label for="rate-4">
+                  <i class="bi bi-star-fill"></i>
+                </label>
+                <input type="radio" name="grade" id="rate-3" value="3">
+                <label for="rate-3">
+                  <i class="bi bi-star-fill"></i>
+                </label>
+                <input type="radio" name="grade" id="rate-2" value="2">
+                <label for="rate-2">
+                  <i class="bi bi-star-fill"></i>
+                </label>
+                <input type="radio" name="grade" id="rate-1" value="1">
+                <label for="rate-1">
+                  <i class="bi bi-star-fill"></i>
+                </label>
+              </div>
+            </div>
+            <div class="review-img sect">
+              <h4 class="sub-tit">사진 첨부</h4>
+              <span>사진을 첨부해주세요 (최대 1장)</span>
+              <label for="file" class="upload-btn">
+                <i class="bi bi-card-image"></i>
+                <span>
+                  사진첨부하기</span>
+              </label>
+              <input type="file" accept="image/jpeg" name="review_image" id="file" />
+            </div>
+            <div class="review-txt sect">
+              <h4 class="sub-tit">리뷰 작성<span>*</span></h4>
+              <input type="text" name="title" placeholder="리뷰 제목을 작성해주세요">
+              <textarea name="content" id="review-content" cols="120" rows="10"
+                placeholder="자세하고 솔직한 리뷰는 다른 고객에게 큰 도움이 됩니다. (최소 20자 이상)"></textarea>
+            </div>
+            <button class="btnC" type="submit">완료</button>
+          </form>
+        </div>
+      </div>
+      <!--문의 모달-->
+      <div id="qna" class="modalC hidden">
+        <div class="tit-area">
+          <h1 class="tit">상품 문의하기</h1>
+          <button class="btn-close btn-close-qna">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <h3 class="sub-tit">상품</h3>
+        <div class="item-area sect">
+          <div class="img-area">
+            <img src="{{product.product_image.all.0.image.url }}" alt="{{product.product_image}}">
+          </div>
+          <div class="info">
+            <p>{{ product.category }}</p>
+            <h3 class="sub-tit">{{ product.name }}</h3>
+          </div>
+        </div>
+        <div class="form-area ">
+          <form action="{% url 'bulletin:createQ' product.pk %}" class="qna-form" method="POST">
+            {% csrf_token %}
+            <div class="qna-cate">
+              <h3 class="sub-tit">문의유형</h3>
+              <table class="cate-area sect">
+                <tbody>
+                  <tr>
+                    <td class="tab_oper tab-active">
+                      <input type="radio" name="category" id="update-qna-1" value="상품">
+                      <label for="update-qna-1">상품</label>
+                    </td>
+                    <td class="tab_oper">
+                      <input type="radio" name="category" id="update-qna-2" value="배송">
+                      <label for="update-qna-2">배송</label>
+                    </td>
+                    <td class="tab_oper">
+                      <input type="radio" name="category" id="update-qna-3" value="반품">
+                      <label for="update-qna-3">반품</label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="tab_oper"><input type="radio" name="category" id="update-qna-4" value="교환">
+                      <label for="update-qna-4">교환</label>
+                    </td>
+                    <td class="tab_oper"><input type="radio" name="category" id="update-qna-5" value="환불">
+                      <label for="update-qna-5">환불</label>
+                    </td>
+                    <td class="tab_oper"><input type="radio" name="category" id="update-qna-6" value="기타">
+                      <label for="update-qna-6">기타</label>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="qna-txt sect">
+              <h4 class="sub-tit">문의내용</h4>
+              <textarea name="content" id="review-content" cols="120" rows="10" placeholder="문의내용을 입력하세요."></textarea>
+            </div>
+            <button class="btnC" type="submit">완료</button>
+          </form>
+        </div>
+      </div>
+      <!--리뷰 수정 모달-->
+      <div id="review_update" class="modalC hidden">
+        <div class="tit-area">
+          <h1 class="tit">리뷰 수정</h1>
+          <button class="btn-close btn-close-rev-update">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="item-area sect">
+          <div class="img-area">
+            <img src="{{product.product_image.all.0.image.url }}" alt="">
+          </div>
+          <div class="info">
+            <p>{{ product.category }}</p>
+            <h3 class="sub-tit">{{ product.name }}</h3>
+          </div>
+        </div>
+        <div class="form-area ">
+          <form action="" class="review-form" method='POST' enctype="multipart/form-data" id="review-form-update">
+            {% csrf_token %}
+            <div class="rate-area sect">
+              <h4 class="sub-tit">별점<span>*</span></h4>
+              <div class="rate-stars">
+                <input type="radio" name="grade" id="update-rate-5" value="5">
+                <label for="update-rate-5">
+                  <i class="bi bi-star-fill"></i>
+                </label>
+                <input type="radio" name="grade" id="update-rate-4" value="4">
+                <label for="update-rate-4">
+                  <i class="bi bi-star-fill"></i>
+                </label>
+                <input type="radio" name="grade" id="update-rate-3" value="3">
+                <label for="update-rate-3">
+                  <i class="bi bi-star-fill"></i>
+                </label>
+                <input type="radio" name="grade" id="update-rate-2" value="2">
+                <label for="update-rate-2">
+                  <i class="bi bi-star-fill"></i>
+                </label>
+                <input type="radio" name="grade" id="update-rate-1" value="1">
+                <label for="update-rate-1">
+                  <i class="bi bi-star-fill"></i>
+                </label>
+              </div>
+            </div>
+            <!-- <div class="review-img sect">
+              <h4 class="sub-tit">사진 첨부</h4>
+              <span>사진을 첨부해주세요 (최대 1장)</span>
+              <label for="file" class="upload-btn">
+                <i class="bi bi-card-image"></i>
+                <span>
+                  사진첨부하기</span>
+              </label>
+              <input type="file" accept="image/jpeg" name="review_image" id="file" />
+            </div> -->
+            <div class="review-txt sect">
+              <h4 class="sub-tit">리뷰 작성<span>*</span></h4>
+              <input type="text" name="title" placeholder="리뷰 제목을 작성해주세요" id="update-title">
+              <textarea name="content" id="update-content" cols="120" rows="10"
+                placeholder="자세하고 솔직한 리뷰는 다른 고객에게 큰 도움이 됩니다. (최소 20자 이상)"></textarea>
+            </div>
+            <button class="btnC" type="submit">완료</button>
+          </form>
+        </div>
+      </div>
+      <!--문의 수정 모달-->
+      <!-- <div id="qna_update" class="modalC hidden">
+        <div class="tit-area">
+          <h1 class="tit">상품 문의하기</h1>
+          <button class="btn-close btn-close-qna-update">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <h3 class="sub-tit">상품</h3>
+        <div class="item-area sect">
+          <div class="img-area">
+            <img src="{{product.product_image.all.0.image.url }}" alt="{{product.product_image}}">
+          </div>
+          <div class="info">
+            <p>{{ product.category }}</p>
+            <h3 class="sub-tit">{{ product.name }}</h3>
+          </div>
+        </div>
+        <div class="form-area">
+          <form action="" class="qna-form" method="POST" id="qna-form-update">
+            {% csrf_token %}
+            <div class="qna-cate">
+              <h3 class="sub-tit">문의유형</h3>
+              <table class="cate-area sect">
+                <tbody>
+                  <tr>
+                    <td class="tab_oper tab-active">
+                      <input type="radio" name="category" id="qna-1" value="상품">
+                      <label for="qna-1">상품</label>
+                    </td>
+                    <td class="tab_oper">
+                      <input type="radio" name="category" id="qna-2" value="배송">
+                      <label for="qna-2">배송</label>
+                    </td>
+                    <td class="tab_oper">
+                      <input type="radio" name="category" id="qna-3" value="반품">
+                      <label for="qna-3">반품</label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="tab_oper"><input type="radio" name="category" id="qna-4" value="교환">
+                      <label for="qna-4">교환</label>
+                    </td>
+                    <td class="tab_oper"><input type="radio" name="category" id="qna-5" value="환불">
+                      <label for="qna-5">환불</label>
+                    </td>
+                    <td class="tab_oper"><input type="radio" name="category" id="qna-6" value="기타">
+                      <label for="qna-6">기타</label>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="qna-txt sect">
+              <h4 class="sub-tit">문의내용</h4>
+              <textarea name="content" id="review-content" cols="120" rows="10" placeholder="문의내용을 입력하세요."></textarea>
+            </div>
+            <button class="btnC" type="submit">완료</button>
+          </form>
+        </div>
+      </div> -->
+
+
+      <!-- 리뷰삭제 안내 모달 -->
+      <div class="modalC modal-alert rev-alert hidden">
+        <p>리뷰를 정말 삭제하시겠습니까?</p>
+        <div class="btn-area">
+          <a class="btnA btn-cancel">취소</a>
+          <a href="" class="btnA btn-delete">삭제</a>
+        </div>
+      </div>
+      <!-- 문의삭제 안내 모달 -->
+      <div class="modalC modal-alert qna-alert hidden">
+        <p>문의를 정말 삭제하시겠습니까?</p>
+        <div class="btn-area">
+          <a class="btnA btn-cancel">취소</a>
+          <a href="" class="btnA btn-delete btn-delete-qna">삭제</a>
+        </div>
+      </div>
+      <!-- 오버레이 끝 -->
+    </div>
+  </section>
+</main>
+
+<!-- 찜하기 script -->
+<script>
+  const forms = document.querySelectorAll('.like-forms')
+  const csrftoken = document
+    .querySelector('[name=csrfmiddlewaretoken]')
+    .value;
+
+  forms.forEach((form) => {
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      const productId = event
+        .target
+        .dataset
+        .productId
+      axios({
+        method: 'post',
+        url: `/products/${productId}/like/`,
+        headers: {
+          'X-CSRFToken': csrftoken
+        }, // csrf token
+      })
+        .then((response) => {
+          const isLiked = response.data.is_liked
+          const likeBtn = document.querySelector(`#like-${productId}`)
+          const heartBtn = document.querySelector(`#heart-${productId}`)
+          const likeCountTag = document.querySelector('#heart-count')
+          const likeCount = response.data.like_count
+          likeCountTag.innerText = likeCount
+          if (isLiked === true) {
+            heartBtn
+              .classList
+              .remove('bi-bookmark-heart')
+            heartBtn
+              .classList
+              .add('bi-bookmark-heart-fill')
+          } else {
+            heartBtn
+              .classList
+              .remove('bi-bookmark-heart-fill')
+            heartBtn
+              .classList
+              .add('bi-bookmark-heart')
+          }
+        })
+    })
+  })
+
+</script>
+{% endblock body %}
+
+{% block js %}
+<script src="{% static 'script/pdt-detail.js' %}"></script>
+{% endblock js %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load index_tag %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'styles/product_index.css' %} ">
+{% endblock css %}
+
+{% block body %}
+
+  <section class='pdt-list row row-cols-2 row-cols-md-3 row-cols-lg-4 gx-0 gy-3'>
+    {% for product in search_list %}
+      <article class='col'>
+        <div class='pdt-item'>
+          <a class='pdt-item-img-wrap' href="{% url 'products:products_detail' product.pk %}">
+            <img class='pdt-item-img' src="{{ product.product_image.all.0.image.url }}" alt="">
+          </a>
+          <a class='pdt-item-name' href="{% url 'products:products_detail' product.pk %}">
+            {{ product.name }}
+          </a>
+          <div class='pdt-item-price'>
+            {% if product.sale != 0 %}
+              <del class='before-sale'>{{ product.pay|intcomma }}원</del>
+            {% endif %}
+            <span class='pdt-pay'>{{ product.pay|discount:product.sale|intcomma }}원</span>
+          </div>
+          {% if product.sale != 0 %}
+            <div class='pdt-sale-badge'>
+              {{ product.sale }}%
+            </div>
+          {% endif %}
+        </div>
+      </article>
+    {% endfor %}
+  </section>
+{% endblock body %}

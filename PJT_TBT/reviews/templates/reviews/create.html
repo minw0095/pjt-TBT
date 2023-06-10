@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block body %}
+<form action='' method='POST' enctype="multipart/form-data">
+    {% csrf_token %}
+    {{review_form}}
+    <button type="submit" class="btnC btn-sb">리뷰 등록</button>
+</form>
+{% endblock body %}

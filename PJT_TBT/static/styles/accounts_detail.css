@@ -1,0 +1,314 @@
+@import url(./main.css);
+
+a:hover {
+  transition: all 300ms ease-in;
+  color: var(--main);
+}
+
+.containers {
+  padding: 0rem 10%;
+}
+
+.title {
+  margin: 2rem 0;
+  font-size: 1.7rem;
+}
+
+.title__user {
+  color: var(--main);
+}
+
+/* 프로필 */
+.profile__container {
+  width: 65rem;
+  min-height: 15rem;
+  padding: 2rem 10rem;
+  border: 2px solid var(--main);
+  white-space: nowrap;
+}
+
+.profile__content {
+  display: flex;
+  margin-top: 0.5rem;
+  justify-content: space-around;
+}
+
+.profile__img {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+}
+
+.profile__name {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: var(--main);
+  font-weight: 600;
+}
+
+.profile__middle {
+  margin-top: 1rem;
+  margin-left: 3rem;
+}
+
+.follow {
+  display: flex;
+}
+
+.follow__container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 1rem;
+}
+
+.follow__cnt {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.follow__title {
+  display: inline-block;
+}
+
+.follow__btn {
+  margin-top: 1.5rem;
+  margin-left: 1.9rem;
+  padding: 0.8rem 1.5rem;
+  background-color: var(--main);
+  border-radius: 5px;
+}
+
+.unfollow__btn {
+  margin-top: 1.5rem;
+  margin-left: 1.9rem;
+  padding: 0.8rem 1rem;
+  border: 2px solid var(--main);
+  border-radius: 5px;
+}
+
+.update__btn {
+  margin-top: 1.5rem;
+  margin-left: 1rem;
+  padding: 0.7rem 0.8rem;
+  background-color: var(--main);
+  color: var(--bg);
+  border: none;
+  border-radius: 5px;
+}
+
+.update__btn:hover,
+.follow__btn:hover {
+  background-color: var(--main-sub);
+  transition: all 300ms ease-in;
+}
+
+.unfollow__btn:hover {
+  background-color: var(--main);
+  color: var(--bg);
+  transition: all 300ms ease-in;
+}
+
+.profile__bottom {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  margin-left: 4rem;
+}
+
+.profile__link {
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+  color: var(--txt);
+}
+
+.profile__link--notuser {
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 1.5rem;
+  text-decoration: none;
+  color: var(--txt);
+}
+
+.profile__link:hover,
+.profile__link--notuser:hover {
+  color: var(--txt);
+}
+
+.arrow {
+  margin-top: -0.4rem;
+  color: var(--main);
+}
+
+/* 최근 주문 내역 */
+.main__title {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+}
+
+.sub__title {
+}
+
+.plus__title {
+  cursor: pointer;
+  margin-top: 2.4rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.sub__title {
+  margin-top: 2.5rem;
+  margin-bottom: 2rem;
+  margin-left: 0.5rem;
+  color: var(--main);
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+
+.order__td--number {
+  width: 20%;
+}
+
+.order__td--img {
+  width: 10%;
+}
+
+.order__name {
+  width: 40%;
+}
+
+.order__td--status {
+  width: 40%;
+  color: var(--sub);
+  font-weight: 600;
+}
+
+.arrow__down {
+  cursor: pointer;
+  display: block;
+  transform: translateY(3rem);
+  margin-left: 30rem;
+  width: 2rem;
+  height: 2rem;
+  color: var(--main);
+}
+
+.arrow__down:hover {
+  transform: translateY(3rem) scale(1.2);
+  transition: all 300ms ease-in;
+}
+
+/* 최근 리뷰 */
+.review__table,
+.order__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.1rem;
+}
+
+.review__table th,
+.order__table th {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.review__table tr,
+.order__table tr {
+  margin-top: 0.5rem;
+}
+
+.review__table th,
+.review__table td,
+.order__table th,
+.order__table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.review__table th:first-child,
+.review__table td:first-child,
+.order__table th:first-child,
+.order__table td:first-child {
+  border-left: none;
+}
+
+.review__table td,
+.order__table td {
+  padding: 10px;
+  height: 100%;
+}
+
+.review__td--img {
+  width: 10%;
+}
+
+.review__td--name {
+  width: 40%;
+}
+
+.review__grade {
+  width: 10%;
+  font-weight: 700;
+  color: var(--sub-b);
+}
+
+.star {
+  margin-top: -0.2rem;
+  margin-right: 0.3rem;
+  color: var(--sub-b);
+}
+
+.review__td--title {
+  width: 40%;
+}
+
+/* 위시리스트 */
+
+.wishlist__img {
+  width: 13rem;
+  height: 13rem;
+}
+
+.wishlist {
+  min-height: 6rem;
+}
+
+.wishlist__content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.5rem;
+  padding-bottom: 6rem;
+}
+
+.wishlist__box {
+  width: 13rem;
+  margin: 1rem 1.5rem;
+  text-align: center;
+}
+
+.wishlist__title {
+  margin-top: 0.5rem;
+  margin-bottom: 0.1rem;
+}
+
+.wishlist__price {
+  font-weight: 600;
+}
+
+.empty {
+  margin-top: 3rem;
+  text-align: center;
+  color: var(--main);
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+
+/* js */
+.hidden {
+  display: none;
+}

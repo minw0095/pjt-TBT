@@ -1,0 +1,119 @@
+@import url(./main.css);
+
+.btnC {
+	background: var(--main);
+	color: var(--bg);
+	border-radius: 0.2rem;
+	padding: 1rem 0.5rem;
+	transition: 0.3s;
+}
+.btnS {
+	background: var(--sub);
+	width: 100%;
+	display: inline-block;
+	text-align: center;
+	margin-top: 2rem;
+}
+.btnS:hover {
+	background: var(--sub-b);
+	color: var(--bg);
+}
+.btn-sb {
+	width: 100%;
+	margin-top: 3rem;
+}
+.btnC:hover {
+	background: var(--main-sub);
+}
+
+#signup .tit-area,
+#login .tit-area,
+#update .tit-area,
+#pw-update .tit-area {
+	margin: 2.5rem 0;
+}
+
+#signup .tit-area .tit,
+#login .tit-area .tit,
+#update .tit-area .tit,
+#pw-update .tit-area .tit {
+	font-size: 2rem;
+	font-weight: 700;
+	text-align: center;
+}
+#signup .form-area,
+#login .form-area,
+#update .form-area,
+#pw-update .form-area {
+	max-width: 650px;
+	margin: 0 auto 2rem;
+}
+#login .form-area {
+	max-width: 450px;
+}
+#signup .signup-form li,
+#login .login-form li,
+#update .update-form li,
+#pw-update .pw-update-form li {
+	padding: 0.5rem 0;
+	margin-bottom: 0.5rem;
+}
+#signup .signup-form label,
+#login .login-form label,
+#update .update-form label,
+#pw-update .pw-update-form label {
+	display: inline-block;
+	margin-bottom: 0.5rem;
+}
+#signup .signup-form input,
+#login .login-form input,
+#update .update-form input,
+#pw-update .pw-update-form input {
+	border: 1px solid var(--line);
+	border-radius: 0.2rem;
+	width: 100%;
+	padding: 0.3rem 0.5rem;
+}
+#signup .signup-form input:focus,
+#login .login-form input:focus,
+#update .update-form input:focus,
+#pw-update .pw-update-form input:focus {
+	border: 2px solid var(--main);
+}
+
+#signup .singup-login,
+#update .prev,
+#pw-update .prev {
+	text-align: center;
+	margin-bottom: 2rem;
+}
+#signup .singup-login .link-login,
+#update .prev .link-prev,
+#pw-update .prev .link-prev {
+	color: var(--highlight);
+	font-weight: 700;
+}
+
+#update .img-edit .upload-btn {
+	border: 2px solid var(--main);
+	border-radius: 0.2rem;
+	display: block;
+	text-align: center;
+	cursor: pointer;
+	padding: 1rem;
+	margin-top: 1rem;
+	transition: 0.2s;
+	color: var(--main);
+	font-weight: 700;
+}
+#update .img-edit .upload-btn:hover {
+	background: var(--main);
+	color: var(--bg);
+}
+#update .img-edit .prof_img {
+	text-align: center;
+}
+#update .img-edit input[type="file"] {
+	border: none;
+	opacity: 0.6;
+}

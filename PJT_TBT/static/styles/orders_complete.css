@@ -1,0 +1,113 @@
+/* 영수증 참고: https://www.daily-receipt.com/my */
+/* 바코드 참고: https://blog.devari.kr/2020/javascript/barcode-open-api */
+@import url('https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap');
+@import url(./main.css);
+
+/* 페이지 제목 */
+.main-header {
+  margin-top: 3rem;
+  text-align: center;
+  font-size: 27px;
+  font-weight: 900;
+}
+
+/* receipt-head */
+.receipt {
+  margin: 4rem auto;
+  width: 500px;
+  font-family: 'Fragment Mono', 'Malgun Gothic';
+  box-shadow: 20px 20px 20px #9595950a, -20px -20px 20px #9595950a, -20px 20px 20px #9595950a, 20px -20px 20px #9595950a;
+}
+
+/* receipt-body */
+.receipt-body {
+  padding: 3rem 1.5rem;
+  width: 100%;
+  background-image: url('https://www.daily-receipt.com/static/media/paper-texture.0d9a183ae499c645eaf6.webp');
+}
+.head {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+}
+.receipt-pdt-info {
+  margin-top: 2rem;
+  width: 100%;
+  border-bottom: 1px solid #95959544;
+}
+.receipt-pdt-info th, .receipt-pdt-info td {
+  padding: 0.8rem;
+}
+.receipt-pdt-info th {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid #95959544;
+  text-align: center;
+  font-size: 1rem;
+}
+.receipt-pdt-info td {
+  font-size: 0.9rem;
+  text-align: left;
+}
+.receipt-pdt-info th:first-child, .receipt-pdt-info tr td:first-child {
+  width: 200px;
+}
+.final-payment-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.8rem;
+  font-weight: 900;
+  border-bottom: 1px solid var(--line);
+}
+.how-to-pay-wrap {
+  padding: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.how-to-pay {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+}
+.barcode {
+  width: 200px;
+  margin: 0 auto;
+}
+
+/* receipt-end */
+.receipt-end {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  /* height: 30rem; */
+  line-height: 16px;
+  vertical-align: center;
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  background-color: rgb(225, 225, 225);
+}
+.end {
+  display: block;
+  /* vertical-align: baseline; */
+  line-height: 16px;
+  transform: matrix(1, 0, 0, 1, 0, 6);
+}
+.sector {
+  display: flex;
+  width: 498px;
+  vertical-align: baseline;
+  line-height: 16px;
+  transform: matrix(1, 0, 0, 1, 2, 0);
+  overflow: hidden;
+}
+.pointy {
+  background-color: rgb(225, 225, 225);
+  display: block;
+  width: 11.6602px;
+  height: 16px;
+  line-height: 16px;
+  margin-left: 4px;
+  transform: matrix(0.707107, 0.707107, -0.707107, 0.707107, 0, 0);
+}

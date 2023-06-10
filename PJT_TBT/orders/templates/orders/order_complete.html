@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load index_tag %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'styles/orders_complete.css' %}">
+{% endblock css %}
+
+{% block body %}
+  <h1 class='main-header'>주문 완료</h1>
+  <main class='receipt'>
+    <article class='receipt-body'>
+      <h1 class='head'>RECEIPT</h1>
+      <table class='receipt-pdt-info'>
+        <tr>
+          <th class='pdt-name-head'>상품</th>
+          <th>개수</th>
+          <th>가격</th>
+          <th>배송비</th>
+        </tr>
+        {% for order in completed_orders %}
+          <tr>
+            <td>{{ order.order_item.product.name }}</td>
+            <td class="pdt-buy-mount" data-mount="{{ order.order_item.quantity }}">{{ order.order_item.quantity }}개</td>
+            <td class='pdt-pay' data-discounted-price='{{ order.order_item.product.pay|discount:order.order_item.product.sale }}'>
+              {{ order.order_item.product.pay|discount:order.order_item.product.sale|intcomma }}원
+            </td>
+            <td class="pdt-delivery" data-delivery='{{ order.order_item.product.delivery }}'>
+              <i class="bi bi-truck"></i>
+              {% if order.order_item.product.delivery != '0' %}
+                {{ order.order_item.product.delivery }}원
+              {% else %}
+                무료배송
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+      <div class="final-payment-container">
+        <p>총 결제 금액</p>
+        <p class="final-payment">
+          <span></span>원</p>
+      </div>
+      <div class='how-to-pay-wrap'>
+        <div class='how-to-pay'>
+          <p>결제 방법</p>
+          <p>카카오페이</p>
+        </div>
+        <div class='how-to-pay'>
+          <p>할부</p>
+          <p>일시불</p>
+        </div>
+        <div class='how-to-pay'>
+          <p>결제일</p>
+          <p>{{ completed_orders.0.date|date:'Y-n-j H:i:s' }}</p>
+        </div>
+      </div>
+      <div class='barcode'>
+        <img src="http://bwipjs-api.metafloor.com/?bcid=code128&text=AB1234567890&scale=3&alttext=tembytem" alt="">
+      </div>
+    </article>
+    <article class='receipt-end'>
+      <div class='end' y='6px'>
+        <div class='sector'>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+          <div class='pointy'></div>
+        </div>
+      </div>
+    </article>
+  </main>
+{% endblock body %}
+
+{% block js %}
+  <script src="{% static 'script/orders_complete.js' %}"></script>
+{% endblock js %}

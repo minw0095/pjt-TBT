@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+  <section class="review__container">
+    <p class="title text-center fw-semibold pt-3">
+      <span class="title__user">{{ users.nickname }}</span>
+      님의 주문 내역
+    </p>
+
+    <!-- 리뷰 리스트 -->
+    <section class="review pb-5">
+      {% comment %} 임의로 if문 넣은거라 바꾸시면 됩니다. {% endcomment %}
+      {% if order_list %}
+        <table class="order__table">
+          <thead>
+            <tr>
+              <th>주문 번호</th>
+              <th></th>
+              <th>주문 상품</th>
+              <th>주문 상태</th>
+            </tr>
+          </thead>
+          <!-- 여기에 주문 상품 for문 넣으시면 됩니다. -->
+          <tbody>
+            {% for orders in order_list %}
+            {% for order in orders %}
+            <tr>
+              <td class="order__td--number">{{ order.pk }}</td>
+              <td class="order__td--img">
+                <img class="profile__review--img" src="{{ order.order_item.product.product_image.all.0.image.url }}" alt="order-img"/>
+              </td>
+              <td class="order__name">{{ order.order_item.product.name }}</td>
+              <td class="order__td--status">배송 완료</td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+          </tbody>
+          <!-- endfor 넣는 자리 -->
+        </table>
+      {% else %}
+        <h1 class="empty">주문 내역이 없어요 :(
+        </h1>
+      {% endif %} 
+    </section>
+  </section>
+{% endblock body %}

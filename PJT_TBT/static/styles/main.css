@@ -1,0 +1,187 @@
+@import url("https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&display=swap");
+
+* {
+	font-family: "Noto Sans KR", sans-serif;
+}
+
+:root {
+	--main: #21684f;
+	--main-sub: #318064;
+	--highlight: #c03039;
+	--high-sub: #e8525b;
+	--sub: #122d4e;
+	--sub-b: #19467e;
+	--bg: #f1f1f1;
+	--bg-gr: #f6f4f4;
+	--txt: #3e3e3e;
+	--line: #959595;
+}
+
+body {
+	font-family: "Noto Sans KR", sans-serif;
+	font-size: 20px;
+	font-weight: 400;
+	color: var(--txt);
+	position: relative;
+	min-height: 100vh;
+}
+
+#header .navi {
+	display: flex;
+	justify-content: space-between;
+	padding: 1rem 0 0;
+}
+#header .navi .search-area {
+	position: relative;
+}
+#header .navi .search-area input[type="search"] {
+	border: 2px solid var(--main);
+	border-radius: 0.5rem;
+	padding: 0.3rem 0.8rem;
+	font-size: 0.9rem;
+}
+#header .navi .search-area button {
+	color: var(--main);
+	position: absolute;
+	right: 3%;
+	top: 20%;
+}
+
+#header .gnb,
+#header .lnb {
+	display: flex;
+}
+#header .gnb li {
+	padding: 0.5rem;
+}
+#header .gnb li a {
+	padding: 0.2rem 0.5rem;
+	position: relative;
+}
+#header .gnb li a::after {
+	content: "";
+	display: block;
+	background: var(--main);
+	width: 0%;
+	height: 3px;
+	position: absolute;
+	bottom: -3px;
+	left: 0px;
+	transition: 0.2s;
+}
+
+#header .gnb li a:hover {
+	color: var(--main);
+	font-weight: 700;
+}
+#header .gnb li a:hover::after {
+	width: 100%;
+}
+#header .gnb li .gnb-basket > i {
+	position: relative;
+}
+#header .gnb li .basket-num {
+	background: var(--high-sub);
+	padding: 0.15rem 0.3rem;
+	display: inline-block;
+	border-radius: 50%;
+	color: var(--bg);
+	font-size: 0.85rem;
+	position: absolute;
+	top: 0;
+	right: 1px;
+}
+#header .logo {
+	margin: 2.5rem 0;
+	text-align: center;
+}
+#header .logo img {
+	width: 200px;
+}
+#header .lnb-area {
+	border-top: 2px solid var(--main);
+	border-bottom: 2px solid var(--main);
+}
+#header .lnb {
+	justify-content: space-around;
+	text-align: center;
+}
+#header .lnb li {
+	width: 25%;
+}
+#header .lnb li a {
+	display: inline-block;
+	padding: 1rem 0;
+	width: 100%;
+	transition: 0.3s;
+}
+#header .lnb li a:hover {
+	background: var(--main);
+	color: var(--bg);
+}
+
+#footer {
+	position: relative;
+	bottom: 0;
+	background: var(--sub);
+	width: 100%;
+	height: 60px;
+	text-align: center;
+	color: var(--bg);
+	z-index: -1;
+}
+#footer p {
+	font-size: 0.8rem;
+	line-height: 60px;
+}
+
+#top {
+	text-align: center;
+	background: var(--main-sub);
+	box-shadow: 0 0 2rem rgba(0, 0, 0, 0.3);
+	color: var(--bg);
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	position: fixed;
+	right: 50px;
+	bottom: 50px;
+	cursor: pointer;
+	z-index: 99;
+	line-height: 50px;
+	font-size: 2rem;
+	opacity: 0;
+	/* transition: all 0.5s ease; */
+	/* display: none; */
+}
+#top:hover {
+	background: var(--main);
+}
+#top.on {
+	display: block;
+	opacity: 1;
+	transition: all 0.5s ease;
+	animation: fadein 0.5s ease-in;
+}
+#top.off {
+	animation: fadeout 0.5s ease-in both;
+}
+@keyframes fadein {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes fadeout {
+	0% {
+		opacity: 1;
+	}
+	60% {
+		opacity: 0;
+	}
+	100% {
+		display: none;
+	}
+}
